@@ -2,20 +2,21 @@ const express = require('express')
 const app = express()
 const request = require('request')
 const PriceServices = require('./Services/PriceServices')
+const fs = require('fs')
+const http = require('http')
+let io = require('socket.io-client')
+const socket = io('wss://streamer.cryptocompare.com')
 
-const currencies = ['ETH','BTC','ANS','SC','XEM','STRAT','XRP','XMR']
+let subscription = ['2~Kraken~ETH~BTC','2~Kraken~XMR~BTC','2~Kraken~SC~BTC']
 
+socket.emit('SubAdd', {subs:subscription} );
 
-const getPrices = function() {
-    currencies.map(sym => request(`https://min-api.cryptocompare.com/data/price?fsym=${sym}&tsyms=USD,BTC`, (error, response, body) => {
-    if(!error && response.statusCode == 200){
-        console.log(body)
-}
-})
-)}
+socket.on('m', function (data) {
+  fs.appendFile('./dump.txt', `${data}|`, function (err) {
+  if (err) throw err;
+  console.log('Saved!');
+});
+  });
 
-PriceServices.getPrices()
-PriceServices.getAllCoinMetaInfo()
-
-
-
+//PriceServices.getPrices()
+//PriceServices.getAllCoinMetaInfo()
