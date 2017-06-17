@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const request = require('request')
+const PriceServices = require('./Services/PriceServices')
 
 const currencies = ['ETH','BTC','ANS','SC','XEM','STRAT','XRP','XMR']
 
@@ -13,5 +14,8 @@ const getPrices = function() {
 })
 )}
 
-getPrices()
+PriceServices.getPrices()
+PriceServices.getAllCoinMetaInfo()
+
+
 
